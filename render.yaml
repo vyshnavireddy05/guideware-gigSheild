@@ -1,0 +1,29 @@
+services:
+  - type: static_site
+    name: gigshield-frontend
+    env: node
+    branch: main
+    buildCommand: cd frontend && npm install && npm run build
+    publishPath: frontend/dist
+
+  - type: web_service
+    name: gigshield-backend
+    env: java
+    branch: main
+    buildCommand: cd backend && mvn -f pom.xml package -DskipTests
+    startCommand: java -jar backend/target/gigshield-backend-1.0.0.jar
+    envVars:
+      - key: DATABASE_URL
+      - key: WEATHER_API_KEY
+      - key: ML_SERVICE_URL
+      - key: CORS_ALLOWED_ORIGINS
+      - key: PORT
+
+  - type: web_service
+    name: gigshield-ml-service
+    env: python
+    branch: main
+    buildCommand: pip install -r ml-service/requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PORT
