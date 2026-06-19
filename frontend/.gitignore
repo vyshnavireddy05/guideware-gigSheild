@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+
+git rm -r --cached frontend/node_modules
+git rm -r --cached frontend/dist
+
+git add .
+git commit -m "Remove generated files"
+git push
